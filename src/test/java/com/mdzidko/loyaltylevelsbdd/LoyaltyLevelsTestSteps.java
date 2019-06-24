@@ -1,39 +1,90 @@
 package com.mdzidko.loyaltylevelsbdd;
 
-import com.mdzidko.loyaltylevelsbdd.loyaltylevels.LoyaltyLevelDto;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevels.LoyaltyLevelsConfiguration;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevels.LoyaltyLevelsFacade;
-import cucumber.api.TestCase;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain.LoyaltyLevelsConfiguration;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain.LoyaltyLevelsFacade;
+import cucumber.api.DataTable;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class LoyaltyLevelsTestSteps{
 
-
     private LoyaltyLevelsFacade loyaltyLevelsFacade = new LoyaltyLevelsConfiguration().loyaltyLevelsFacade();
-    private List<LoyaltyLevelDto> allLoyaltyLevels;
+    private Map<String, LoyaltyLevelDto> allLoyaltyLevelsByName = new HashMap<>();
 
-    @Given("^there are 2 loyalty levels")
-    public void there_are_2_loyalty_levels(){
-        LoyaltyLevelDto bronze = new LoyaltyLevelDto("Bronze", 2000, 1);
-        LoyaltyLevelDto gold = new LoyaltyLevelDto("Gold", 5000, 3);
 
-        loyaltyLevelsFacade.add(bronze, gold);
+
+
+    @Given("^There are given loyalty levels")
+    public void thereAreGivenLoyaltyLevels(DataTable loyaltyLevels){
+        
+
+        allLoyaltyLevelsByName.clear();
+
+        loyaltyLevels.asList(LoyaltyLevelDto.class)
+                .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
     }
 
     @When("^I ask for all loyalty levels")
-    public void i_ask_for_all_loyalty_levels(){
-        allLoyaltyLevels = loyaltyLevelsFacade.findAll();
+    public void iAskForAllLoyaltyLevels(){
+
+        allLoyaltyLevelsByName.clear();
+
+        allLoyaltyLevelsByName = loyaltyLevelsFacade.findAll().stream()
+                                .collect(Collectors.toMap(LoyaltyLevelDto::getName, level -> level));
     }
 
 
-    @Then("^I get 2 loyalty levels")
-    public void i_get_2_loyalty_levels(){
-        assertEquals(allLoyaltyLevels.size(), 2);
+    @Then("^I get (.*) loyalty levels")
+    public void iGetNLoyaltyLevels(int count){
+        assertEquals(allLoyaltyLevelsByName.size(), count);
+    }
+
+
+    @And("^I ask for loyalty level \"([^\"]*)\" by UUID$")
+    public void iAskForLoyaltyLevelByUUID(String levelName){
+
+        UUID levelUUID = UUID.fromString(allLoyaltyLevelsByName.get(levelName).getUuid());
+
+        allLoyaltyLevelsByName.clear();
+        allLoyaltyLevelsByName.put(levelName, loyaltyLevelsFacade.findByUuid(levelUUID));
+    }
+
+
+    @And("^Found loyalty levels has$")
+    public void foundLoyaltyLevelsHas(DataTable loyaltyLevels) {
+
+        loyaltyLevels.asList(LoyaltyLevelDto.class).forEach(
+                loyaltyLevel -> {
+                    LoyaltyLevelDto foundLoyaltyLevel = allLoyaltyLevelsByName.get(loyaltyLevel.getName());
+
+                    assertNotNull(foundLoyaltyLevel);
+                    assertEquals(foundLoyaltyLevel.getName(), loyaltyLevel.getName());
+                    assertEquals(foundLoyaltyLevel.getLowerLevelBound(), loyaltyLevel.getLowerLevelBound());
+                    assertEquals(foundLoyaltyLevel.getPointsBonusPercentage(), loyaltyLevel.getPointsBonusPercentage(), 0.0001);
+                }
+        );
+    }
+
+    @When("^I add loyalty levels$")
+    public void iAddLoyaltyLevels(DataTable loyaltyLevels) {
+
+        loyaltyLevels.asList(LoyaltyLevelDto.class)
+                .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
+    }
+
+    @When("^I update loyalty level$")
+    public void iUpdateLoyaltyLevel(DataTable loyaltyLevels) {
+
+        loyaltyLevels.asList(LoyaltyLevelDto.class)
+                .forEach(loyaltyLevel -> loyaltyLevelsFacade.update(UUID.fromString(loyaltyLevel.getUuid()), loyaltyLevel));
     }
 }

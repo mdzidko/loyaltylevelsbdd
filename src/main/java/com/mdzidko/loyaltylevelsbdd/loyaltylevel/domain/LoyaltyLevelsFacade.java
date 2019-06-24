@@ -1,7 +1,10 @@
-package com.mdzidko.loyaltylevelsbdd.loyaltylevels;
+package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
+
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class LoyaltyLevelsFacade {
@@ -26,7 +29,14 @@ public class LoyaltyLevelsFacade {
 
     public List<LoyaltyLevelDto> findAll() {
         return loyaltyLevelsRepository.findAll().stream()
-                .map(level -> level.dto())
+                .map(LoyaltyLevel::dto)
                 .collect(Collectors.toList());
+    }
+
+    public LoyaltyLevelDto findByUuid(UUID uuid) {
+        return loyaltyLevelsRepository.findByUuid(uuid);
+    }
+
+    public void update(UUID fromString, LoyaltyLevelDto loyaltyLevel) {
     }
 }
