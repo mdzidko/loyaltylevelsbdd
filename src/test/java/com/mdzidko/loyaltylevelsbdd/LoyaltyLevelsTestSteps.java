@@ -18,16 +18,14 @@ import static org.junit.Assert.assertNotNull;
 public class LoyaltyLevelsTestSteps{
 
     private LoyaltyLevelsFacade loyaltyLevelsFacade = new LoyaltyLevelsConfiguration().loyaltyLevelsFacade();
-    private Map<String, LoyaltyLevelDto> allLoyaltyLevelsByName = new HashMap<>();
-
-
+    private Map<String, LoyaltyLevelDto> allLoyaltyLevelsByUuid = new HashMap<>();
 
 
     @Given("^There are given loyalty levels")
     public void thereAreGivenLoyaltyLevels(DataTable loyaltyLevels){
-        
 
-        allLoyaltyLevelsByName.clear();
+
+        allLoyaltyLevelsByUuid.clear();
 
         loyaltyLevels.asList(LoyaltyLevelDto.class)
                 .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
@@ -36,35 +34,25 @@ public class LoyaltyLevelsTestSteps{
     @When("^I ask for all loyalty levels")
     public void iAskForAllLoyaltyLevels(){
 
-        allLoyaltyLevelsByName.clear();
+        allLoyaltyLevelsByUuid.clear();
 
-        allLoyaltyLevelsByName = loyaltyLevelsFacade.findAll().stream()
-                                .collect(Collectors.toMap(LoyaltyLevelDto::getName, level -> level));
+        allLoyaltyLevelsByUuid = loyaltyLevelsFacade.findAll().stream()
+                                .collect(Collectors.toMap(LoyaltyLevelDto::getUuid, level -> level));
     }
 
 
     @Then("^I get (.*) loyalty levels")
     public void iGetNLoyaltyLevels(int count){
-        assertEquals(allLoyaltyLevelsByName.size(), count);
+        assertEquals(allLoyaltyLevelsByUuid.size(), count);
     }
 
 
-    @And("^I ask for loyalty level \"([^\"]*)\" by UUID$")
-    public void iAskForLoyaltyLevelByUUID(String levelName){
-
-        UUID levelUUID = UUID.fromString(allLoyaltyLevelsByName.get(levelName).getUuid());
-
-        allLoyaltyLevelsByName.clear();
-        allLoyaltyLevelsByName.put(levelName, loyaltyLevelsFacade.findByUuid(levelUUID));
-    }
-
-
-    @And("^Found loyalty levels has$")
+    @Then("^Found loyalty levels has$")
     public void foundLoyaltyLevelsHas(DataTable loyaltyLevels) {
 
         loyaltyLevels.asList(LoyaltyLevelDto.class).forEach(
                 loyaltyLevel -> {
-                    LoyaltyLevelDto foundLoyaltyLevel = allLoyaltyLevelsByName.get(loyaltyLevel.getName());
+                    LoyaltyLevelDto foundLoyaltyLevel = allLoyaltyLevelsByUuid.get(loyaltyLevel.getUuid());
 
                     assertNotNull(foundLoyaltyLevel);
                     assertEquals(foundLoyaltyLevel.getName(), loyaltyLevel.getName());
@@ -81,10 +69,17 @@ public class LoyaltyLevelsTestSteps{
                 .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
     }
 
-    @When("^I update loyalty level$")
-    public void iUpdateLoyaltyLevel(DataTable loyaltyLevels) {
+    @When("^I ask for loyalty level with UUID \"([^\"]*)\"$")
+    public void iAskForLoyaltyLevelWithUUID(String uuid){
+        allLoyaltyLevelsByUuid.clear();
 
-        loyaltyLevels.asList(LoyaltyLevelDto.class)
-                .forEach(loyaltyLevel -> loyaltyLevelsFacade.update(UUID.fromString(loyaltyLevel.getUuid()), loyaltyLevel));
+        UUID levelUUID = UUID.fromString(uuid);
+        allLoyaltyLevelsByUuid.put(uuid, loyaltyLevelsFacade.findByUuid(levelUUID));
+    }
+
+    @When("^I update loyalty level with UUID \"([^\"]*)\"$")
+    public void iUpdateLoyaltyLevelWithUUID(String uuid){
+        UUID levelUUID = UUID.fromString(uuid);
+        loyaltyLevelsFacade.update(levelUUID);
     }
 }
