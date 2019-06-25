@@ -34,9 +34,14 @@ public class LoyaltyLevelsFacade {
     }
 
     public LoyaltyLevelDto findByUuid(UUID uuid) {
-        return loyaltyLevelsRepository.findByUuid(uuid);
+        return loyaltyLevelsRepository.findByUuid(uuid).dto();
     }
 
-    public void update(UUID fromString, LoyaltyLevelDto loyaltyLevel) {
+    public void remove(UUID levelUUID) {
+
+        LoyaltyLevel loyaltyLevel = loyaltyLevelsRepository.findByUuid(levelUUID);
+
+        loyaltyLevelsRepository.delete(loyaltyLevel);
+
     }
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 
 import java.util.UUID;
 
-@Builder
 @Getter
 class LoyaltyLevel {
 
@@ -19,6 +18,8 @@ class LoyaltyLevel {
 
         if(uuid == null)
             this.uuid = UUID.randomUUID();
+        else
+            this.uuid = uuid;
 
         this.name = name;
         this.pointsBonusPercentage = pointsBonusPercentage;

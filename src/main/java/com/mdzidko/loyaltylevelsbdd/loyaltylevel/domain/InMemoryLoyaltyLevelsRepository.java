@@ -20,7 +20,16 @@ public class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository 
     }
 
     @Override
-    public LoyaltyLevelDto findByUuid(UUID uuid) {
-        return loyaltyLevels.get(uuid).dto();
+    public LoyaltyLevel findByUuid(UUID uuid) {
+
+        LoyaltyLevel fount = loyaltyLevels.get(uuid);
+
+        return loyaltyLevels.get(uuid);
+    }
+
+    @Override
+    public void delete(LoyaltyLevel loyaltyLevel) {
+
+        loyaltyLevels.remove(loyaltyLevel.getUuid());
     }
 }
