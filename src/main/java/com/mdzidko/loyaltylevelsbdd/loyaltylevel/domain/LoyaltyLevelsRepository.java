@@ -11,4 +11,6 @@ interface LoyaltyLevelsRepository {
     LoyaltyLevel findByUuid(UUID uuid);
 
     void delete(LoyaltyLevel loyaltyLevel);
+
+    boolean loyaltyLevelExists(String name);
 }

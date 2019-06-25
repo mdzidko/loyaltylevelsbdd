@@ -1,6 +1,7 @@
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelExistsException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,11 +19,12 @@ public class LoyaltyLevelsFacade {
         this.converter = converter;
     }
 
-    public LoyaltyLevelsFacade add(LoyaltyLevelDto... levels) {
+    public LoyaltyLevelsFacade add(LoyaltyLevelDto level) {
 
-        Arrays.stream(levels)
-                .map(converter::convert)
-                .forEach(loyaltyLevelsRepository::save);
+        if(loyaltyLevelsRepository.loyaltyLevelExists(level.getName()))
+            throw new LoyaltyLevelExistsException();
+
+        loyaltyLevelsRepository.save(converter.convert(level));
 
         return this;
     }

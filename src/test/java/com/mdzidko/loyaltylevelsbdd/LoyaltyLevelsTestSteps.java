@@ -17,15 +17,13 @@ import static org.junit.Assert.assertNotNull;
 public class LoyaltyLevelsTestSteps{
 
     private LoyaltyLevelsFacade loyaltyLevelsFacade = new LoyaltyLevelsConfiguration().loyaltyLevelsFacade();
-    private Map<String, LoyaltyLevelDto> allLoyaltyLevelsByUuid = new HashMap<>();
     private Map<String, LoyaltyLevelDto> allLoyaltyLevelsByName = new HashMap<>();
+    private String loggedMassage;
 
 
     @Given("^There are given loyalty levels")
     public void thereAreGivenLoyaltyLevels(DataTable loyaltyLevels){
 
-
-        allLoyaltyLevelsByUuid.clear();
         allLoyaltyLevelsByName.clear();
 
         loyaltyLevels.asList(LoyaltyLevelDto.class)
@@ -36,13 +34,9 @@ public class LoyaltyLevelsTestSteps{
     @When("^I ask for all loyalty levels")
     public void iAskForAllLoyaltyLevels(){
 
-        allLoyaltyLevelsByUuid.clear();
         allLoyaltyLevelsByName.clear();
 
         List<LoyaltyLevelDto> fountLoyaltyLevels = loyaltyLevelsFacade.findAll();
-
-        allLoyaltyLevelsByUuid = fountLoyaltyLevels.stream()
-                .collect(Collectors.toMap(LoyaltyLevelDto::getUuid, level -> level));
 
         allLoyaltyLevelsByName = fountLoyaltyLevels.stream()
                 .collect(Collectors.toMap(LoyaltyLevelDto::getName, level -> level));
@@ -51,29 +45,39 @@ public class LoyaltyLevelsTestSteps{
     @When("^I add loyalty levels$")
     public void iAddLoyaltyLevels(DataTable loyaltyLevels) {
 
-        loyaltyLevels.asList(LoyaltyLevelDto.class)
-                .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
+        try {
+            loyaltyLevels.asList(LoyaltyLevelDto.class)
+                    .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
+        }
+        catch(RuntimeException ex){
+            loggedMassage = ex.getMessage();
+        }
     }
 
-    @When("^I ask for loyalty level with UUID \"([^\"]*)\"$")
-    public void iAskForLoyaltyLevelWithUUID(String uuid){
-        allLoyaltyLevelsByUuid.clear();
+    @When("^I ask for loyalty level \"([^\"]*)\"$")
+    public void iAskForLoyaltyLevel(String name){
+
+        String stringUuid = allLoyaltyLevelsByName.get(name).getUuid();
+        UUID uuid = UUID.fromString(stringUuid );
+
         allLoyaltyLevelsByName.clear();
 
-        UUID levelUUID = UUID.fromString(uuid);
-        allLoyaltyLevelsByUuid.put(uuid, loyaltyLevelsFacade.findByUuid(levelUUID));
+        allLoyaltyLevelsByName.put(name, loyaltyLevelsFacade.findByUuid(uuid));
     }
 
-    @When("^I remove loyalty level with UUID \"([^\"]*)\"$")
-    public void iUpdateLoyaltyLevelWithUUID(String uuid){
-        UUID levelUUID = UUID.fromString(uuid);
-        loyaltyLevelsFacade.remove(levelUUID);
+    @When("^I remove loyalty level \"([^\"]*)\"$")
+    public void iRemoveLoyaltyLevel(String name){
+
+        String stringUuid = allLoyaltyLevelsByName.get(name).getUuid();
+        UUID uuid = UUID.fromString(stringUuid );
+
+        loyaltyLevelsFacade.remove(uuid);
     }
 
 
     @Then("^I get (.*) loyalty levels")
     public void iGetNLoyaltyLevels(int count){
-        assertEquals(allLoyaltyLevelsByUuid.size(), count);
+        assertEquals(allLoyaltyLevelsByName.size(), count);
     }
 
 
@@ -82,10 +86,7 @@ public class LoyaltyLevelsTestSteps{
 
         loyaltyLevels.asList(LoyaltyLevelDto.class).forEach(
                 loyaltyLevel -> {
-                    LoyaltyLevelDto foundLoyaltyLevel = allLoyaltyLevelsByUuid.get(loyaltyLevel.getUuid());
-
-                    if(foundLoyaltyLevel == null)
-                        foundLoyaltyLevel = allLoyaltyLevelsByName.get(loyaltyLevel.getName());
+                    LoyaltyLevelDto foundLoyaltyLevel = allLoyaltyLevelsByName.get(loyaltyLevel.getName());
 
                     assertNotNull(foundLoyaltyLevel);
                     assertEquals(foundLoyaltyLevel.getName(), loyaltyLevel.getName());
@@ -93,5 +94,10 @@ public class LoyaltyLevelsTestSteps{
                     assertEquals(foundLoyaltyLevel.getPointsBonusPercentage(), loyaltyLevel.getPointsBonusPercentage(), 0.0001);
                 }
         );
+    }
+
+    @Then("^Message \"([^\"]*)\"$\" is logged")
+    public void givenMessageIsLogged(String message){
+        assertEquals(this.loggedMassage, message);
     }
 }

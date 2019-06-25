@@ -32,4 +32,9 @@ public class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository 
 
         loyaltyLevels.remove(loyaltyLevel.getUuid());
     }
+
+    @Override
+    public boolean loyaltyLevelExists(String name) {
+        return loyaltyLevels.values().stream().anyMatch(level -> level.getName().equals(name));
+    }
 }

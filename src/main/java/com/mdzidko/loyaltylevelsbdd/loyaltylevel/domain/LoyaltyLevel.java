@@ -4,6 +4,7 @@ import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -14,12 +15,9 @@ class LoyaltyLevel {
     private double pointsBonusPercentage;
     private int lowerLevelBound;
 
-    public LoyaltyLevel(UUID uuid, String name, double pointsBonusPercentage, int lowerLevelBound) {
+    public LoyaltyLevel(String name, double pointsBonusPercentage, int lowerLevelBound) {
 
-        if(uuid == null)
-            this.uuid = UUID.randomUUID();
-        else
-            this.uuid = uuid;
+        this.uuid = UUID.randomUUID();
 
         this.name = name;
         this.pointsBonusPercentage = pointsBonusPercentage;
@@ -35,4 +33,17 @@ class LoyaltyLevel {
                 .build();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoyaltyLevel that = (LoyaltyLevel) o;
+        return Objects.equals(uuid, that.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(uuid);
+    }
 }
