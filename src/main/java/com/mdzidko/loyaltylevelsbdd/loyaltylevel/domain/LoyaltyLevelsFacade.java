@@ -1,11 +1,11 @@
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDoesntExistException;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelExistsException;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class LoyaltyLevelsFacade {
@@ -35,15 +35,13 @@ public class LoyaltyLevelsFacade {
                 .collect(Collectors.toList());
     }
 
-    public LoyaltyLevelDto findByUuid(UUID uuid) {
-        return loyaltyLevelsRepository.findByUuid(uuid).dto();
-    }
+    public LoyaltyLevelsFacade remove(String name) {
 
-    public void remove(UUID levelUUID) {
+        Optional<LoyaltyLevel> loyaltyLevel = loyaltyLevelsRepository.findByName(name);
 
-        LoyaltyLevel loyaltyLevel = loyaltyLevelsRepository.findByUuid(levelUUID);
+        loyaltyLevelsRepository.delete(loyaltyLevel.orElseThrow(LoyaltyLevelDoesntExistException::new));
 
-        loyaltyLevelsRepository.delete(loyaltyLevel);
+        return this;
 
     }
 }

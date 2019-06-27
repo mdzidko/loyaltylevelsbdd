@@ -1,8 +1,10 @@
 package com.mdzidko.loyaltylevelsbdd;
 
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDoesntExistException;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain.LoyaltyLevelsConfiguration;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain.LoyaltyLevelsFacade;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelExistsException;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -49,29 +51,21 @@ public class LoyaltyLevelsTestSteps{
             loyaltyLevels.asList(LoyaltyLevelDto.class)
                     .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
         }
-        catch(RuntimeException ex){
+        catch(LoyaltyLevelExistsException ex){
             loggedMassage = ex.getMessage();
         }
     }
 
-    @When("^I ask for loyalty level \"([^\"]*)\"$")
-    public void iAskForLoyaltyLevel(String name){
-
-        String stringUuid = allLoyaltyLevelsByName.get(name).getUuid();
-        UUID uuid = UUID.fromString(stringUuid );
-
-        allLoyaltyLevelsByName.clear();
-
-        allLoyaltyLevelsByName.put(name, loyaltyLevelsFacade.findByUuid(uuid));
-    }
 
     @When("^I remove loyalty level \"([^\"]*)\"$")
     public void iRemoveLoyaltyLevel(String name){
 
-        String stringUuid = allLoyaltyLevelsByName.get(name).getUuid();
-        UUID uuid = UUID.fromString(stringUuid );
-
-        loyaltyLevelsFacade.remove(uuid);
+        try {
+            loyaltyLevelsFacade.remove(name);
+        }
+        catch(LoyaltyLevelDoesntExistException ex){
+            loggedMassage = ex.getMessage();
+        }
     }
 
 
@@ -96,8 +90,8 @@ public class LoyaltyLevelsTestSteps{
         );
     }
 
-    @Then("^Message \"([^\"]*)\"$\" is logged")
-    public void givenMessageIsLogged(String message){
+    @Then("^Message \"([^\"]*)\" is logged$")
+    public void messageIsLogged(String message) {
         assertEquals(this.loggedMassage, message);
     }
 }

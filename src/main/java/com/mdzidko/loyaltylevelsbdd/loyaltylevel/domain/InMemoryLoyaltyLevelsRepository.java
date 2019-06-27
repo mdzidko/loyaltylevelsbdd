@@ -1,16 +1,14 @@
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
-
 import java.util.*;
 
 public class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository {
 
-    private Map<UUID, LoyaltyLevel> loyaltyLevels = new HashMap<>();
+    private Map<String, LoyaltyLevel> loyaltyLevels = new HashMap<>();
 
     @Override
     public LoyaltyLevel save(LoyaltyLevel level) {
-        loyaltyLevels.put(level.getUuid(), level);
+        loyaltyLevels.put(level.getName(), level);
         return level;
     }
 
@@ -20,17 +18,17 @@ public class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository 
     }
 
     @Override
-    public LoyaltyLevel findByUuid(UUID uuid) {
+    public Optional<LoyaltyLevel> findByName(String name) {
 
-        LoyaltyLevel fount = loyaltyLevels.get(uuid);
+        LoyaltyLevel found = loyaltyLevels.get(name);
 
-        return loyaltyLevels.get(uuid);
+        return Optional.ofNullable(found);
     }
 
     @Override
     public void delete(LoyaltyLevel loyaltyLevel) {
 
-        loyaltyLevels.remove(loyaltyLevel.getUuid());
+        loyaltyLevels.remove(loyaltyLevel.getName());
     }
 
     @Override
