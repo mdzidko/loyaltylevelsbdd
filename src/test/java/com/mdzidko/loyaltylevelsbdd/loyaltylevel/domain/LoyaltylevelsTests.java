@@ -1,4 +1,4 @@
-package com.mdzidko.loyaltylevelsbdd;
+package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;

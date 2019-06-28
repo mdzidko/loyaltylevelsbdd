@@ -1,5 +1,6 @@
-package com.mdzidko.loyaltylevelsbdd;
+package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDataValidationException;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDoesntExistException;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain.LoyaltyLevelsConfiguration;
@@ -51,7 +52,7 @@ public class LoyaltyLevelsTestSteps{
             loyaltyLevels.asList(LoyaltyLevelDto.class)
                     .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
         }
-        catch(LoyaltyLevelExistsException ex){
+        catch(LoyaltyLevelExistsException | LoyaltyLevelDataValidationException ex){
             loggedMassage = ex.getMessage();
         }
     }

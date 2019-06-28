@@ -1,9 +1,19 @@
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
-public class LoyaltyLevelsConfiguration {
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-    public LoyaltyLevelsFacade loyaltyLevelsFacade(){
+@Configuration
+class LoyaltyLevelsConfiguration {
 
-        return new LoyaltyLevelsFacade(new InMemoryLoyaltyLevelsRepository(), new LoyaltyLevelConverter());
+    LoyaltyLevelsFacade loyaltyLevelsFacade(){
+
+        return loyaltyLevelsFacade(new InMemoryLoyaltyLevelsRepository());
+    }
+
+    @Bean
+    LoyaltyLevelsFacade loyaltyLevelsFacade(LoyaltyLevelsRepository loyaltyLevelsRepository){
+
+        return new LoyaltyLevelsFacade(loyaltyLevelsRepository, new LoyaltyLevelFactory(loyaltyLevelsRepository));
     }
 }

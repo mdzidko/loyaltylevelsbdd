@@ -2,7 +2,6 @@ package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 interface LoyaltyLevelsRepository {
 
@@ -12,7 +11,7 @@ interface LoyaltyLevelsRepository {
 
     void delete(LoyaltyLevel loyaltyLevel);
 
-    boolean loyaltyLevelExists(String name);
+    boolean exists(String name);
 
     Optional<LoyaltyLevel> findByName(String name);
 }

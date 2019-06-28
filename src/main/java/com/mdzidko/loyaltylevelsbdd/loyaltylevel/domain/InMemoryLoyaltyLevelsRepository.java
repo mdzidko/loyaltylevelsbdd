@@ -2,9 +2,9 @@ package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import java.util.*;
 
-public class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository {
+class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository {
 
-    private Map<String, LoyaltyLevel> loyaltyLevels = new HashMap<>();
+    private final Map<String, LoyaltyLevel> loyaltyLevels = new HashMap<>();
 
     @Override
     public LoyaltyLevel save(LoyaltyLevel level) {
@@ -32,7 +32,7 @@ public class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository 
     }
 
     @Override
-    public boolean loyaltyLevelExists(String name) {
+    public boolean exists(String name) {
         return loyaltyLevels.values().stream().anyMatch(level -> level.getName().equals(name));
     }
 }

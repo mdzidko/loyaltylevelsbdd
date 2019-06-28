@@ -5,14 +5,14 @@ import lombok.Getter;
 
 import java.util.Objects;
 
-@Getter
 class LoyaltyLevel {
 
-    private String name;
-    private double pointsBonusPercentage;
-    private int lowerLevelBound;
+    @Getter
+    private final String name;
+    private final double pointsBonusPercentage;
+    private final int lowerLevelBound;
 
-    public LoyaltyLevel(String name, double pointsBonusPercentage, int lowerLevelBound) {
+    LoyaltyLevel(String name, double pointsBonusPercentage, int lowerLevelBound) {
 
         this.name = name;
         this.pointsBonusPercentage = pointsBonusPercentage;
