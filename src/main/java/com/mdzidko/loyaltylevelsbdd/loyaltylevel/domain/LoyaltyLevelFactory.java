@@ -23,6 +23,9 @@ class LoyaltyLevelFactory {
 
     private void validate(LoyaltyLevelDto levelDto) {
 
+        if(levelDto.getName() == null || levelDto.getName().isEmpty())
+            throw new LoyaltyLevelDataValidationException("Loyalty level name can't be empty");
+
         if(levelDto.getLowerLevelBound() < 0)
             throw new LoyaltyLevelDataValidationException("Value of lower level bound can't be lower than 0");
 

@@ -12,6 +12,11 @@ class LoyaltyLevelsConfiguration {
     }
 
     @Bean
+    LoyaltyLevelsRepository loyaltyLevelsRepository(){
+        return new InMemoryLoyaltyLevelsRepository();
+    }
+
+    @Bean
     LoyaltyLevelsFacade loyaltyLevelsFacade(LoyaltyLevelsRepository loyaltyLevelsRepository){
 
         return new LoyaltyLevelsFacade(loyaltyLevelsRepository, new LoyaltyLevelFactory(loyaltyLevelsRepository));

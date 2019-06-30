@@ -64,6 +64,14 @@ Feature: Getting loyalty levels
         Then I get 0 loyalty levels
         And Message "Value of lower level bound can't be lower than 0" is logged
 
+    Scenario: Try to add loyalty level with no name
+        When I add loyalty levels
+            |name  |pointsBonusPercentage|lowerLevelBound|
+            |      |2                    |-1000           |
+        And I ask for all loyalty levels
+        Then I get 0 loyalty levels
+        And Message "Loyalty level name can't be empty" is logged
+
 
     Scenario: Remove one loyalty level
         Given There are given loyalty levels

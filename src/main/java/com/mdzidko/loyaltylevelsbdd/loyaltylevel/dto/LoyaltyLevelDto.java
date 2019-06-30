@@ -1,9 +1,13 @@
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
 @Getter
 public class LoyaltyLevelDto {
 
