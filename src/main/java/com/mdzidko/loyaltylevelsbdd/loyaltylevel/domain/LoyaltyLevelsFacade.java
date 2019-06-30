@@ -31,9 +31,9 @@ public class LoyaltyLevelsFacade {
                 .collect(Collectors.toList());
     }
 
-    public LoyaltyLevelsFacade remove(String name) {
+    public LoyaltyLevelsFacade remove(long id) {
 
-        Optional<LoyaltyLevel> loyaltyLevel = loyaltyLevelsRepository.findByName(name);
+        Optional<LoyaltyLevel> loyaltyLevel = loyaltyLevelsRepository.findById(id);
         loyaltyLevelsRepository.delete(loyaltyLevel.orElseThrow(LoyaltyLevelDoesntExistException::new));
 
         return this;

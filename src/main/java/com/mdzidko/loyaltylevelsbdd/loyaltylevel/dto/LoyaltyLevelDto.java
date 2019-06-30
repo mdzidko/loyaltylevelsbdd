@@ -2,7 +2,6 @@ package com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto;
 
 import lombok.*;
 
-import java.io.Serializable;
 
 @Builder
 @NoArgsConstructor
@@ -11,6 +10,7 @@ import java.io.Serializable;
 @Getter
 public class LoyaltyLevelDto {
 
+    private long id;
     private String name;
     private double pointsBonusPercentage;
     private int lowerLevelBound;

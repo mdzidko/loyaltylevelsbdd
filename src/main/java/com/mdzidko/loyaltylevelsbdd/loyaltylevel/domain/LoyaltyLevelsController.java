@@ -25,8 +25,8 @@ class LoyaltyLevelsController {
         loyaltyLevelsFacade.add(loyaltyLevelDto);
     }
 
-    @DeleteMapping("/{name}")
-    void deleteLoyaltyLevel(@PathVariable("name") String name){
-        loyaltyLevelsFacade.remove(name);
+    @DeleteMapping("/{id}")
+    void deleteLoyaltyLevel(@PathVariable("id") long id){
+        loyaltyLevelsFacade.remove(id);
     }
 }

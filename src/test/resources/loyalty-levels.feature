@@ -1,4 +1,4 @@
-Feature: Getting loyalty levels
+Feature: Loyalty levels management operations
 
     Scenario: Get all available loyalty levels
         Given There are given loyalty levels
@@ -78,7 +78,8 @@ Feature: Getting loyalty levels
             |name  |pointsBonusPercentage|lowerLevelBound|
             |Bronze|1                    |1000           |
             |Gold  |2                    |2000           |
-        When I remove loyalty level "Gold"
+        When I ask for all loyalty levels
+        And I remove loyalty level "Gold"
         And I ask for all loyalty levels
         Then Found loyalty levels has
             |name  |pointsBonusPercentage|lowerLevelBound|
@@ -91,9 +92,9 @@ Feature: Getting loyalty levels
             |name  |pointsBonusPercentage|lowerLevelBound|
             |Bronze|1                    |1000           |
             |Gold  |2                    |2000           |
-        When I remove loyalty level "Silver"
+        When I remove not existing loyalty level
         And I ask for all loyalty levels
-        Then Message "Loyalty level with existing name doesn't exist" is logged
+        Then Message "Loyalty level with given id doesn't exist" is logged
         And Found loyalty levels has
             |name  |pointsBonusPercentage|lowerLevelBound|
             |Bronze|1                    |1000           |

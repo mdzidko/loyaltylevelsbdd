@@ -4,11 +4,16 @@ import java.util.*;
 
 class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository {
 
-    private final Map<String, LoyaltyLevel> loyaltyLevels = new HashMap<>();
+    private final Map<Long, LoyaltyLevel> loyaltyLevels = new HashMap<>();
+    private long lastId = 0;
 
     @Override
     public LoyaltyLevel save(LoyaltyLevel level) {
-        loyaltyLevels.put(level.getName(), level);
+
+        ++lastId;
+        level.setId(lastId);
+
+        loyaltyLevels.put(lastId, level);
         return level;
     }
 
@@ -18,9 +23,9 @@ class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository {
     }
 
     @Override
-    public Optional<LoyaltyLevel> findByName(String name) {
+    public Optional<LoyaltyLevel> findById(long id) {
 
-        LoyaltyLevel found = loyaltyLevels.get(name);
+        LoyaltyLevel found = loyaltyLevels.get(id);
 
         return Optional.ofNullable(found);
     }
@@ -28,11 +33,11 @@ class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository {
     @Override
     public void delete(LoyaltyLevel loyaltyLevel) {
 
-        loyaltyLevels.remove(loyaltyLevel.getName());
+        loyaltyLevels.remove(loyaltyLevel.getId());
     }
 
     @Override
-    public boolean exists(String name) {
+    public boolean existsByName(String name) {
         return loyaltyLevels.values().stream().anyMatch(level -> level.getName().equals(name));
     }
 }

@@ -2,7 +2,7 @@ package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDataValidationException;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelExistsException;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelNameDuplicationException;
 
 class LoyaltyLevelFactory {
 
@@ -32,7 +32,7 @@ class LoyaltyLevelFactory {
         if(levelDto.getPointsBonusPercentage() < 0)
             throw new LoyaltyLevelDataValidationException("Value of points bonus percentage cant't be lower than 0");
 
-        if(loyaltyLevelsRepository.exists(levelDto.getName()))
-            throw new LoyaltyLevelExistsException();
+        if(loyaltyLevelsRepository.existsByName(levelDto.getName()))
+            throw new LoyaltyLevelNameDuplicationException();
     }
 }

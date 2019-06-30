@@ -3,9 +3,7 @@ package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDataValidationException;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDoesntExistException;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain.LoyaltyLevelsConfiguration;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain.LoyaltyLevelsFacade;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelExistsException;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelNameDuplicationException;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -20,14 +18,14 @@ import static org.junit.Assert.assertNotNull;
 public class LoyaltyLevelsTestSteps{
 
     private LoyaltyLevelsFacade loyaltyLevelsFacade = new LoyaltyLevelsConfiguration().loyaltyLevelsFacade();
-    private Map<String, LoyaltyLevelDto> allLoyaltyLevelsByName = new HashMap<>();
+    private Map<String, LoyaltyLevelDto> allLoyaltyLevels = new HashMap<>();
     private String loggedMassage;
 
 
     @Given("^There are given loyalty levels")
     public void thereAreGivenLoyaltyLevels(DataTable loyaltyLevels){
 
-        allLoyaltyLevelsByName.clear();
+        allLoyaltyLevels.clear();
 
         loyaltyLevels.asList(LoyaltyLevelDto.class)
                 .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
@@ -37,11 +35,11 @@ public class LoyaltyLevelsTestSteps{
     @When("^I ask for all loyalty levels")
     public void iAskForAllLoyaltyLevels(){
 
-        allLoyaltyLevelsByName.clear();
+        allLoyaltyLevels.clear();
 
         List<LoyaltyLevelDto> fountLoyaltyLevels = loyaltyLevelsFacade.findAll();
 
-        allLoyaltyLevelsByName = fountLoyaltyLevels.stream()
+        allLoyaltyLevels = fountLoyaltyLevels.stream()
                 .collect(Collectors.toMap(LoyaltyLevelDto::getName, level -> level));
     }
 
@@ -52,7 +50,7 @@ public class LoyaltyLevelsTestSteps{
             loyaltyLevels.asList(LoyaltyLevelDto.class)
                     .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
         }
-        catch(LoyaltyLevelExistsException | LoyaltyLevelDataValidationException ex){
+        catch(LoyaltyLevelNameDuplicationException | LoyaltyLevelDataValidationException ex){
             loggedMassage = ex.getMessage();
         }
     }
@@ -61,8 +59,23 @@ public class LoyaltyLevelsTestSteps{
     @When("^I remove loyalty level \"([^\"]*)\"$")
     public void iRemoveLoyaltyLevel(String name){
 
+        long id = allLoyaltyLevels.get(name).getId();
+
         try {
-            loyaltyLevelsFacade.remove(name);
+            loyaltyLevelsFacade.remove(id);
+        }
+        catch(LoyaltyLevelDoesntExistException ex){
+            loggedMassage = ex.getMessage();
+        }
+    }
+
+    @When("^I remove not existing loyalty level")
+    public void iRemoveNotExistingLoyaltyLevel(){
+
+        long id = 987654321;
+
+        try {
+            loyaltyLevelsFacade.remove(id);
         }
         catch(LoyaltyLevelDoesntExistException ex){
             loggedMassage = ex.getMessage();
@@ -72,7 +85,7 @@ public class LoyaltyLevelsTestSteps{
 
     @Then("^I get (.*) loyalty levels")
     public void iGetNLoyaltyLevels(int count){
-        assertEquals(allLoyaltyLevelsByName.size(), count);
+        assertEquals(allLoyaltyLevels.size(), count);
     }
 
 
@@ -81,7 +94,7 @@ public class LoyaltyLevelsTestSteps{
 
         loyaltyLevels.asList(LoyaltyLevelDto.class).forEach(
                 loyaltyLevel -> {
-                    LoyaltyLevelDto foundLoyaltyLevel = allLoyaltyLevelsByName.get(loyaltyLevel.getName());
+                    LoyaltyLevelDto foundLoyaltyLevel = allLoyaltyLevels.get(loyaltyLevel.getName());
 
                     assertNotNull(foundLoyaltyLevel);
                     assertEquals(foundLoyaltyLevel.getName(), loyaltyLevel.getName());

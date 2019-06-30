@@ -11,7 +11,7 @@ interface LoyaltyLevelsRepository {
 
     void delete(LoyaltyLevel loyaltyLevel);
 
-    boolean exists(String name);
+    boolean existsByName(String name);
 
-    Optional<LoyaltyLevel> findByName(String name);
+    Optional<LoyaltyLevel> findById(long id);
 }
