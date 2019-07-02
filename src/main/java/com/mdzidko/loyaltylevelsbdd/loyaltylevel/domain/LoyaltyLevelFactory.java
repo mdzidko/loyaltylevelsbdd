@@ -6,10 +6,10 @@ import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelNameDuplication
 
 class LoyaltyLevelFactory {
 
-    private final LoyaltyLevelsRepository loyaltyLevelsRepository;
+    private final LoyaltyLevelRepository loyaltyLevelRepository;
 
-    LoyaltyLevelFactory(LoyaltyLevelsRepository loyaltyLevelsRepository) {
-        this.loyaltyLevelsRepository = loyaltyLevelsRepository;
+    LoyaltyLevelFactory(LoyaltyLevelRepository loyaltyLevelRepository) {
+        this.loyaltyLevelRepository = loyaltyLevelRepository;
     }
 
     LoyaltyLevel create(LoyaltyLevelDto levelDto) {
@@ -32,7 +32,7 @@ class LoyaltyLevelFactory {
         if(levelDto.getPointsBonusPercentage() < 0)
             throw new LoyaltyLevelDataValidationException("Value of points bonus percentage cant't be lower than 0");
 
-        if(loyaltyLevelsRepository.existsByName(levelDto.getName()))
+        if(loyaltyLevelRepository.existsByName(levelDto.getName()))
             throw new LoyaltyLevelNameDuplicationException();
     }
 }

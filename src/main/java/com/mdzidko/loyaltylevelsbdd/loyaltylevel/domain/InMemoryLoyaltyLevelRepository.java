@@ -2,7 +2,7 @@ package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import java.util.*;
 
-class InMemoryLoyaltyLevelsRepository implements LoyaltyLevelsRepository {
+class InMemoryLoyaltyLevelRepository implements LoyaltyLevelRepository {
 
     private final Map<Long, LoyaltyLevel> loyaltyLevels = new HashMap<>();
     private long lastId = 0;

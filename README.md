@@ -1,2 +1,2 @@
 # Customer loyalty system
-Sample project demonstrating BDD and DDD using Spring.
+Sample project demonstrating BDD with Hexagonal Architecture using Spring.

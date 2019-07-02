@@ -3,7 +3,7 @@ package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 import java.util.List;
 import java.util.Optional;
 
-interface LoyaltyLevelsRepository {
+interface LoyaltyLevelRepository {
 
     LoyaltyLevel save(LoyaltyLevel level);
 

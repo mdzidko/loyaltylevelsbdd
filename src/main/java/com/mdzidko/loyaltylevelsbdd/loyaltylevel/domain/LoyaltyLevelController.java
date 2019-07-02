@@ -7,26 +7,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/loyaltylevels")
-class LoyaltyLevelsController {
+class LoyaltyLevelController {
 
-    private final LoyaltyLevelsFacade loyaltyLevelsFacade;
+    private final LoyaltyLevelFacade loyaltyLevelFacade;
 
-    LoyaltyLevelsController(LoyaltyLevelsFacade loyaltyLevelsFacade) {
-        this.loyaltyLevelsFacade = loyaltyLevelsFacade;
+    LoyaltyLevelController(LoyaltyLevelFacade loyaltyLevelFacade) {
+        this.loyaltyLevelFacade = loyaltyLevelFacade;
     }
 
     @GetMapping
     List<LoyaltyLevelDto> getAllLoyaltyLevels(){
-        return loyaltyLevelsFacade.findAll();
+        return loyaltyLevelFacade.findAll();
     }
 
     @PostMapping
     void addLoyaltyLevel(@RequestBody LoyaltyLevelDto loyaltyLevelDto){
-        loyaltyLevelsFacade.add(loyaltyLevelDto);
+        loyaltyLevelFacade.add(loyaltyLevelDto);
     }
 
     @DeleteMapping("/{id}")
     void deleteLoyaltyLevel(@PathVariable("id") long id){
-        loyaltyLevelsFacade.remove(id);
+        loyaltyLevelFacade.remove(id);
     }
 }

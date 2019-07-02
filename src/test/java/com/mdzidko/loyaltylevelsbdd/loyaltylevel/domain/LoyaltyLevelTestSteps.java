@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class LoyaltyLevelsTestSteps{
+public class LoyaltyLevelTestSteps {
 
-    private LoyaltyLevelsFacade loyaltyLevelsFacade = new LoyaltyLevelsConfiguration().loyaltyLevelsFacade();
+    private LoyaltyLevelFacade loyaltyLevelFacade = new LoyaltyLevelConfiguration().loyaltyLevelsFacade();
     private Map<String, LoyaltyLevelDto> allLoyaltyLevels = new HashMap<>();
     private String loggedMassage;
 
@@ -28,7 +28,7 @@ public class LoyaltyLevelsTestSteps{
         allLoyaltyLevels.clear();
 
         loyaltyLevels.asList(LoyaltyLevelDto.class)
-                .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
+                .forEach(loyaltyLevel -> loyaltyLevelFacade.add(loyaltyLevel));
     }
 
 
@@ -37,7 +37,7 @@ public class LoyaltyLevelsTestSteps{
 
         allLoyaltyLevels.clear();
 
-        List<LoyaltyLevelDto> fountLoyaltyLevels = loyaltyLevelsFacade.findAll();
+        List<LoyaltyLevelDto> fountLoyaltyLevels = loyaltyLevelFacade.findAll();
 
         allLoyaltyLevels = fountLoyaltyLevels.stream()
                 .collect(Collectors.toMap(LoyaltyLevelDto::getName, level -> level));
@@ -48,7 +48,7 @@ public class LoyaltyLevelsTestSteps{
 
         try {
             loyaltyLevels.asList(LoyaltyLevelDto.class)
-                    .forEach(loyaltyLevel -> loyaltyLevelsFacade.add(loyaltyLevel));
+                    .forEach(loyaltyLevel -> loyaltyLevelFacade.add(loyaltyLevel));
         }
         catch(LoyaltyLevelNameDuplicationException | LoyaltyLevelDataValidationException ex){
             loggedMassage = ex.getMessage();
@@ -62,7 +62,7 @@ public class LoyaltyLevelsTestSteps{
         long id = allLoyaltyLevels.get(name).getId();
 
         try {
-            loyaltyLevelsFacade.remove(id);
+            loyaltyLevelFacade.remove(id);
         }
         catch(LoyaltyLevelDoesntExistException ex){
             loggedMassage = ex.getMessage();
@@ -75,7 +75,7 @@ public class LoyaltyLevelsTestSteps{
         long id = 987654321;
 
         try {
-            loyaltyLevelsFacade.remove(id);
+            loyaltyLevelFacade.remove(id);
         }
         catch(LoyaltyLevelDoesntExistException ex){
             loggedMassage = ex.getMessage();
