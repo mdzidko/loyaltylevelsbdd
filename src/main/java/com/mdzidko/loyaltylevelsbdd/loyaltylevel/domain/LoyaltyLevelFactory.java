@@ -37,7 +37,7 @@ class LoyaltyLevelFactory {
         if(loyaltyLevelRepository.existsByName(levelDto.getName()))
             throw new LoyaltyLevelNameDuplicationException();
 
-        if(loyaltyLevelRepository.existsAnyDefault())
+        if(levelDto.isDefault() && loyaltyLevelRepository.existsAnyDefault())
             throw new LoyaltyLevelDefaultDuplicationException();
     }
 }

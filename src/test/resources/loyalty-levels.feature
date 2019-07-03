@@ -54,7 +54,7 @@ Feature: Loyalty level module
             |Gold  |3                    |3000           |false  |
         When I add loyalty levels
             |name  |pointsBonusPercentage|lowerLevelBound|isDefault|
-            |Gold|2                    |2000             |true  |
+            |Silver|2                    |2000             |true  |
         And I ask for all loyalty levels
         Then Message "Can't add second default loyalty level" is logged
         And I get 2 loyalty levels
@@ -84,7 +84,7 @@ Feature: Loyalty level module
     Scenario: Try to add loyalty level with no name
         When I add loyalty levels
             |name  |pointsBonusPercentage|lowerLevelBound|isDefault|
-            |Silver|2                    |-1000          |false  |
+            |      |2                    |1000          |false  |
         And I ask for all loyalty levels
         Then I get 0 loyalty levels
         And Message "Loyalty level name can't be empty" is logged

@@ -13,6 +13,6 @@ class CustomerConfiguration {
     @Bean
     CustomerFacade loyaltyLevelsFacade(CustomerRepository customerRepository){
 
-        return new CustomerFacade(customerRepository);
+        return new CustomerFacade(customerRepository, new CustomerFactory());
     }
 }

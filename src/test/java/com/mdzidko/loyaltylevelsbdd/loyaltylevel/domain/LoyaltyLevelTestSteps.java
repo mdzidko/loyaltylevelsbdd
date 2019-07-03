@@ -1,9 +1,6 @@
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDataValidationException;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDoesntExistException;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
-import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelNameDuplicationException;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.*;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -50,7 +47,9 @@ public class LoyaltyLevelTestSteps {
             loyaltyLevels.asList(LoyaltyLevelDto.class)
                     .forEach(loyaltyLevel -> loyaltyLevelFacade.add(loyaltyLevel));
         }
-        catch(LoyaltyLevelNameDuplicationException | LoyaltyLevelDataValidationException ex){
+        catch(LoyaltyLevelNameDuplicationException
+                | LoyaltyLevelDataValidationException
+                | LoyaltyLevelDefaultDuplicationException ex){
             loggedMassage = ex.getMessage();
         }
     }

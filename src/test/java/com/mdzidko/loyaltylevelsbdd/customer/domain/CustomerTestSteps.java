@@ -1,16 +1,14 @@
 package com.mdzidko.loyaltylevelsbdd.customer.domain;
 
 import com.mdzidko.loyaltylevelsbdd.customer.dto.CustomerDto;
+import com.mdzidko.loyaltylevelsbdd.customer.dto.LoyaltyLevelDto;
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -20,15 +18,16 @@ public class CustomerTestSteps {
 
     private CustomerFacade customerFacade = new CustomerConfiguration().customerFacade();
     private Map<String, CustomerDto> allCustomers = new HashMap<>();
+    private Set<LoyaltyLevelDto> loyaltyLevelsConfiguration = new HashSet<>();
 
 
     @Given("^There are given customers$")
-    public void thereAreGivenCustomers(DataTable customers) {
+    public void thereAreGivenCustomers(DataTable cardNumbers) {
 
         allCustomers.clear();
 
-        customers.asList(CustomerDto.class)
-                .forEach(customer -> customerFacade.add(customer));
+        cardNumbers.asList(String.class)
+                .forEach(card -> customerFacade.add(card, loyaltyLevelsConfiguration));
     }
 
     @When("^I ask for all customers$")
@@ -56,18 +55,23 @@ public class CustomerTestSteps {
         );
     }
 
-    @Given("^There are given customer loyalty levels$")
-    public void thereAreGivenCustomerLoyaltyLevels() {
+    @Given("^There is given loyalty levels configuration$")
+    public void thereIsGivenLoyaltyLevelsconfigutation(DataTable configuration) {
+        loyaltyLevelsConfiguration.clear();
+        loyaltyLevelsConfiguration.addAll(configuration.asList(LoyaltyLevelDto.class));
 
     }
 
     @When("^I add customer with card number \"([^\"]*)\"$")
-    public void iAddCustomerWithCardNumber(String cardNuber) {
+    public void iAddCustomerWithCardNumber(String cardNumber) {
+        customerFacade.add(cardNumber, loyaltyLevelsConfiguration);
     }
 
 
     @And("^I ask for customer with card number \"([^\"]*)\"$")
     public void iAskForCustomerWithCardNumber(String cardNumber){
+        customerFacade.findByCardNumber(cardNumber)
+                .ifPresent(customer -> allCustomers.put(customer.getCardNumber(), customer));
 
     }
 

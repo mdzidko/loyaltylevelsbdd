@@ -1,4 +1,3 @@
-
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,9 +9,9 @@ import java.util.Optional;
 interface LoyaltyLevelJpaRepository extends JpaRepository<LoyaltyLevel, Long> {
 
     boolean existsByName(String name);
+    boolean existsByIsDefaultIsTrue();
 }
 
-@Repository
 class LoyaltyLevelRepositoryJpaImpl implements LoyaltyLevelRepository {
 
     private final LoyaltyLevelJpaRepository loyaltyLevelJpaRepository;
@@ -49,6 +48,6 @@ class LoyaltyLevelRepositoryJpaImpl implements LoyaltyLevelRepository {
 
     @Override
     public boolean existsAnyDefault() {
-        return false;
+        return loyaltyLevelJpaRepository.existsByIsDefaultIsTrue();
     }
 }
