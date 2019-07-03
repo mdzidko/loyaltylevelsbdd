@@ -14,5 +14,6 @@ public class LoyaltyLevelDto {
     private String name;
     private double pointsBonusPercentage;
     private int lowerLevelBound;
+    private boolean isDefault;
 
 }

@@ -23,12 +23,14 @@ class LoyaltyLevel {
     private String name;
     private double pointsBonusPercentage;
     private int lowerLevelBound;
+    private boolean isDefault;
 
-    LoyaltyLevel(String name, double pointsBonusPercentage, int lowerLevelBound) {
+    LoyaltyLevel(String name, double pointsBonusPercentage, int lowerLevelBound, boolean isDefault) {
 
         this.name = name;
         this.pointsBonusPercentage = pointsBonusPercentage;
         this.lowerLevelBound = lowerLevelBound;
+        this.isDefault = isDefault;
     }
 
     LoyaltyLevelDto dto() {
@@ -37,8 +39,12 @@ class LoyaltyLevel {
                     .name(name)
                     .pointsBonusPercentage(pointsBonusPercentage)
                     .lowerLevelBound(lowerLevelBound)
+                .isDefault(isDefault)
                 .build();
     }
 
+    boolean isDefault(){
+        return isDefault;
+    }
 
 }

@@ -14,4 +14,6 @@ interface LoyaltyLevelRepository {
     boolean existsByName(String name);
 
     Optional<LoyaltyLevel> findById(long id);
+
+    boolean existsAnyDefault();
 }

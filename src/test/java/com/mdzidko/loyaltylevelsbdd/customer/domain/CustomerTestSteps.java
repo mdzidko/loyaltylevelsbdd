@@ -53,6 +53,7 @@ public class CustomerTestSteps {
                     assertEquals(foundCustomer.getLoyaltyLevel(), customer.getLoyaltyLevel());
                     assertEquals(foundCustomer.getTotalBet(), customer.getTotalBet(), 0.0001);
                 }
+        );
     }
 
     @Given("^There are given customer loyalty levels$")
@@ -61,21 +62,18 @@ public class CustomerTestSteps {
     }
 
     @When("^I add customer with card number \"([^\"]*)\"$")
-    public void iAddCustomerWithCardNumber(String arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    public void iAddCustomerWithCardNumber(String cardNuber) {
     }
 
+
     @And("^I ask for customer with card number \"([^\"]*)\"$")
-    public void iAskForCustomerWithCardNumber(String arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    public void iAskForCustomerWithCardNumber(String cardNumber){
+
     }
 
     @When("^I add new bet with value (\\d+) for customer with card number \"([^\"]*)\"$")
-    public void iAddNewBetWithValueForCustomerWithCardNumber(int arg0, String arg1) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    public void iAddNewBetWithValueForCustomerWithCardNumber(double bet, String cardNumber) {
+
     }
 
     @And("^I update customer loyalty levels$")

@@ -1,6 +1,7 @@
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDataValidationException;
+import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDefaultDuplicationException;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelDto;
 import com.mdzidko.loyaltylevelsbdd.loyaltylevel.dto.LoyaltyLevelNameDuplicationException;
 
@@ -18,7 +19,8 @@ class LoyaltyLevelFactory {
 
         return new LoyaltyLevel(levelDto.getName(),
                                 levelDto.getPointsBonusPercentage(),
-                                levelDto.getLowerLevelBound());
+                                levelDto.getLowerLevelBound(),
+                                levelDto.isDefault());
     }
 
     private void validate(LoyaltyLevelDto levelDto) {
@@ -34,5 +36,8 @@ class LoyaltyLevelFactory {
 
         if(loyaltyLevelRepository.existsByName(levelDto.getName()))
             throw new LoyaltyLevelNameDuplicationException();
+
+        if(loyaltyLevelRepository.existsAnyDefault())
+            throw new LoyaltyLevelDefaultDuplicationException();
     }
 }

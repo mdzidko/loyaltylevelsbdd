@@ -31,6 +31,11 @@ class InMemoryLoyaltyLevelRepository implements LoyaltyLevelRepository {
     }
 
     @Override
+    public boolean existsAnyDefault() {
+        return loyaltyLevels.values().stream().anyMatch(LoyaltyLevel::isDefault);
+    }
+
+    @Override
     public void delete(LoyaltyLevel loyaltyLevel) {
 
         loyaltyLevels.remove(loyaltyLevel.getId());

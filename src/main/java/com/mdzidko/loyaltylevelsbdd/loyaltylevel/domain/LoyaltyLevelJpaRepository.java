@@ -1,3 +1,4 @@
+
 package com.mdzidko.loyaltylevelsbdd.loyaltylevel.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,5 +45,10 @@ class LoyaltyLevelRepositoryJpaImpl implements LoyaltyLevelRepository {
     @Override
     public Optional<LoyaltyLevel> findById(long id) {
         return loyaltyLevelJpaRepository.findById(id);
+    }
+
+    @Override
+    public boolean existsAnyDefault() {
+        return false;
     }
 }
