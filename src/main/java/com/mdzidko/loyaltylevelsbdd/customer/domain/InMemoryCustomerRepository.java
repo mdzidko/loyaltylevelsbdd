@@ -22,7 +22,12 @@ class InMemoryCustomerRepository implements CustomerRepository {
 
     @Override
     public Optional<Customer> findByCardNumber(String cardNumber) {
-        return Optional.of(customers.get(cardNumber));
+        return Optional.ofNullable(customers.get(cardNumber));
+    }
+
+    @Override
+    public boolean existsByCardNumber(String cardNumber) {
+        return customers.containsKey(cardNumber);
     }
 
 

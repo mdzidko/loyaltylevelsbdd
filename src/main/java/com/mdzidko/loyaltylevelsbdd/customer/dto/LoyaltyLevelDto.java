@@ -3,7 +3,7 @@ package com.mdzidko.loyaltylevelsbdd.customer.dto;
 import lombok.Data;
 
 @Data
-public class LoyaltyLevelDto {
+public class LoyaltyLevelDto{
 
     private String name;
     private int lowerLevelBound;

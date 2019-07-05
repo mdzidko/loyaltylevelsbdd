@@ -14,17 +14,21 @@ Feature: Customer module
 
 
     Scenario: Try to add customer with existing card number
-        Given There are given customers
-            |name     |
+        Given There is given loyalty levels configuration
+            |name    |lowerLevelBound|isDefault|
+            |bronze|0              |true   |
+        And There are given customers
             |123ABC456|
         When I add customer with card number "123ABC456"
-        Then Message "Customer with given card number already exists" is logged
+        Then CustomerCardNumberDuplicationException is thrown
 
 
     Scenario: Bet for customer was received
-        Given There are given customers
-            |name     |
-            |123ABC456|
+        Given There is given loyalty levels configuration
+            |name    |lowerLevelBound|isDefault|
+            |bronze|0              |true   |
+        And There are given customers
+            |123ABC456 |
         When I add new bet with value 100 for customer with card number "123ABC456"
         And I ask for customer with card number "123ABC456"
         Then Found customers has
@@ -34,23 +38,23 @@ Feature: Customer module
 
     Scenario: Bet for not existing customer was received
         When I add new bet with value 100 for customer with card number "123ABC456"
-        Then Message "Customer with given card number doesn't exists" is logged
+        Then CustomerDoesntExistsException is thrown
 
 
     Scenario: Update customers loyalty levels
         Given There is given loyalty levels configuration
-            |name    |lowerLevelBound|isDfault|
+            |name    |lowerLevelBound|isDefault|
             |bronze|0              |true   |
             |silver|1000           |false  |
             |gold  |2000           |false  |
+            |platinium  |3000      |false  |
         And There are given customers
-            |name       |
             |123ABC456|
             |987XYZ001|
         When I add new bet with value 100 for customer with card number "123ABC456"
         And I add new bet with value 200 for customer with card number "987XYZ001"
         And I add new bet with value 1000 for customer with card number "123ABC456"
-        And I update customer loyalty levels
+        And I update customers loyalty levels
         And I ask for all customers
         Then Found customers has
             |cardNumber |loyaltyLevel|totalBet|

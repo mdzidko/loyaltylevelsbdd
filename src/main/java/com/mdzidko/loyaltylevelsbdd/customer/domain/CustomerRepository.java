@@ -12,4 +12,6 @@ interface CustomerRepository {
     List<Customer> findAll();
 
     Optional<Customer> findByCardNumber(String cardNumber);
+
+    boolean existsByCardNumber(String cardNumber);
 }

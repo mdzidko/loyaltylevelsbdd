@@ -1,6 +1,7 @@
 package com.mdzidko.loyaltylevelsbdd.customer.domain;
 
 
+import com.mdzidko.loyaltylevelsbdd.customer.dto.CustomerDoesntExistsException;
 import com.mdzidko.loyaltylevelsbdd.customer.dto.CustomerDto;
 import com.mdzidko.loyaltylevelsbdd.customer.dto.LoyaltyLevelDto;
 
@@ -36,5 +37,25 @@ public class CustomerFacade {
         Optional<Customer> customer = customerRepository.findByCardNumber(cardNumber);
 
         return customer.map(Customer::dto);
+    }
+
+    public CustomerFacade bet(String cardNumber, double value) {
+        Optional<Customer> customer = customerRepository.findByCardNumber(cardNumber);
+
+        if(!customer.isPresent())
+            throw new CustomerDoesntExistsException();
+
+        customer.get().bet(value);
+
+        return this;
+    }
+
+    public CustomerFacade updateLoyaltyLevels(Set<LoyaltyLevelDto> loyaltyLevelsConfiguration) {
+
+        customerRepository.findAll()
+                .forEach(customer-> customer.updateLoyaltyLevel(loyaltyLevelsConfiguration));
+
+        return this;
+
     }
 }
